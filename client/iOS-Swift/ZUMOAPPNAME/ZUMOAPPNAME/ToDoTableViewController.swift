@@ -57,7 +57,7 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
             try self.fetchedResultController.performFetch()
         } catch let error1 as NSError {
             error = error1
-            print("Unresolved error \(error), \(String(describing: error?.userInfo))")
+            print("Unresolved error \(String(describing: error)), \(String(describing: error?.userInfo))")
             abort()
         }
 
@@ -251,6 +251,8 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
                 // wrong index when rows are reordered. For more information, see:
                 // http://go.microsoft.com/fwlink/?LinkID=524590&clcid=0x409
                 self.tableView.reloadRows(at: [indexPath!], with: .automatic)
+            @unknown default:
+                print("We have an unknown type \(type)")
             }
         })
     }
