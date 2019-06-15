@@ -57,7 +57,7 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
             try self.fetchedResultController.performFetch()
         } catch let error1 as NSError {
             error = error1
-            print("Unresolved error \(error), \(error?.userInfo)")
+            print("Unresolved error \(error), \(String(describing: error?.userInfo))")
             abort()
         }
 
@@ -72,7 +72,9 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         self.table!.pull(with: self.table?.query(), queryId: "AllRecords") {
             (error) -> Void in
             
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+             DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
             
             if error != nil {
                 // A real application would handle various errors like network conditions,
@@ -94,7 +96,9 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
                 }
             }
             
-            self.refreshControl?.endRefreshing()
+            DispatchQueue.main.async {
+                self.refreshControl?.endRefreshing()
+            }
         }
     }
     
