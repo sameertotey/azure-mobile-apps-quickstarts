@@ -45,12 +45,12 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let client = MSClient(applicationURLString: "ZUMOAPPURL")
+        let client = MSClient(applicationURLString: "https://azuremobile-sbt.azurewebsites.net")
         let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext!
         self.store = MSCoreDataStore(managedObjectContext: managedObjectContext)
         client.syncContext = MSSyncContext(delegate: nil, dataSource: self.store, callback: nil)
         self.table = client.syncTable(withName: "TodoItem")
-        self.refreshControl?.addTarget(self, action: #selector(ToDoTableViewController.onRefresh(_:)), for: UIControlEvents.valueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(ToDoTableViewController.onRefresh(_:)), for: UIControl.Event.valueChanged)
         
         var error : NSError? = nil
         do {
@@ -66,7 +66,7 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         self.onRefresh(self.refreshControl)
     }
     
-    func onRefresh(_ sender: UIRefreshControl!) {
+    @objc func onRefresh(_ sender: UIRefreshControl!) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         self.table!.pull(with: self.table?.query(), queryId: "AllRecords") {
@@ -109,9 +109,9 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         return true
     }
     
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
     {
-        return UITableViewCellEditingStyle.delete
+        return UITableViewCell.EditingStyle.delete
     }
     
     override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String?
@@ -119,7 +119,7 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         return "Complete"
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
     {
         let record = self.fetchedResultController.object(at: indexPath) as! NSManagedObject
         var item = self.store!.tableItem(from: record)
