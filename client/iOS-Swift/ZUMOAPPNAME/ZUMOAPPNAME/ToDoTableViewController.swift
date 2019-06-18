@@ -206,7 +206,9 @@ class ToDoTableViewController: UITableViewController, NSFetchedResultsController
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         self.table!.insert(itemToInsert) {
             (item, error) in
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
             if error != nil {
                 print("Error: " + (error! as NSError).description)
             }
